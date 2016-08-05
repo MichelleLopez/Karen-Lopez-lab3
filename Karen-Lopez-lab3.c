@@ -27,6 +27,12 @@ int main(int argc, char const *argv[])
 		random(laberinto, &turno);
 		cin>>movimiento;
 		moverLaberinto(laberinto, movimiento, &puntos, &turno);
+		if (*puntosPtr<=0)
+		{
+			cout<<"Perdiste"<<endl;
+			movimiento = '0';
+			break;
+		}
 	} while (movimiento != '0');
 
 	
@@ -88,6 +94,14 @@ void moverLaberinto(char** laberinto, char movimiento, int* puntosPtr, int* turn
 			else if(laberinto[i][j-1] == '0'){
 				cout<<"Movimiento no permitido, hay pared";
 			}
+			else if(laberinto[i][j-1] == '5'){
+				laberinto[i][j] = ' ';
+				laberinto[i][j-1] = '2';
+				printLaberinto(laberinto);
+				*puntosPtr= *puntosPtr - 5;
+				*turnoPtr= *turnoPtr + 1;
+				cout<<"Puntos: "<<*puntosPtr<<"  Turno: "<<*turnoPtr<<endl;
+			}
 			break;
 
 		case 'd':
@@ -117,6 +131,14 @@ void moverLaberinto(char** laberinto, char movimiento, int* puntosPtr, int* turn
 			else if(laberinto[i][j+1] == '0'){
 				cout<<"Movimiento no permitido, hay pared";
 			}
+			else if(laberinto[i][j+1] == '5'){
+				laberinto[i][j] = ' ';
+				laberinto[i][j+1] = '2';
+				printLaberinto(laberinto);
+				*puntosPtr= *puntosPtr - 5;
+				*turnoPtr= *turnoPtr + 1;
+				cout<<"Puntos: "<<*puntosPtr<<"  Turno: "<<*turnoPtr<<endl;
+			}
 			break;
 		case 'x':
 			if(laberinto[i+1][j] == '1') {
@@ -141,6 +163,14 @@ void moverLaberinto(char** laberinto, char movimiento, int* puntosPtr, int* turn
 			else if(laberinto[i+1][j] == '0'){
 				cout<<"Movimiento no permitido, hay pared";
 			}
+			else if(laberinto[i+1][j] == '5'){
+				laberinto[i][j] = ' ';
+				laberinto[i+1][j] = '2';
+				printLaberinto(laberinto);
+				*puntosPtr= *puntosPtr - 5;
+				*turnoPtr= *turnoPtr + 1;
+				cout<<"Puntos: "<<*puntosPtr<<"  Turno: "<<*turnoPtr<<endl;
+			}
 			break;
 		case 'w':
 			if(laberinto[i-1][j] == '1') {
@@ -164,6 +194,14 @@ void moverLaberinto(char** laberinto, char movimiento, int* puntosPtr, int* turn
 			}
 			else if(laberinto[i-1][j] == '0'){
 				cout<<"Movimiento no permitido, hay pared";
+			}
+			else if(laberinto[i-1][j] == '5'){
+				laberinto[i][j] = ' ';
+				laberinto[i-1][j] = '2';
+				printLaberinto(laberinto);
+				*puntosPtr= *puntosPtr - 5;
+				*turnoPtr= *turnoPtr + 1;
+				cout<<"Puntos: "<<*puntosPtr<<"  Turno: "<<*turnoPtr<<endl;
 			}
 			break;
 	}
