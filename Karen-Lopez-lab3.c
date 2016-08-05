@@ -1,11 +1,14 @@
 #include <iostream>
 #include <fstream>
+#include <time.h>
+#include <stdlib.h>
 using namespace std;
 void inicializarLaberinto(char**);
 void printLaberinto(char**);
 void moverLaberinto(char**, char, int*, int*);
 int columna(char**);
 int fila(char**);
+void random(char**, int*);
 
 int main(int argc, char const *argv[])
 {	
@@ -21,10 +24,9 @@ int main(int argc, char const *argv[])
 	printLaberinto(laberinto);
 	do
 	{
+		random(laberinto, &turno);
 		cin>>movimiento;
-
 		moverLaberinto(laberinto, movimiento, &puntos, &turno);
-
 	} while (movimiento != '0');
 
 	
@@ -48,7 +50,7 @@ void inicializarLaberinto(char** laberinto){
 }
 
 void printLaberinto(char** laberinto){
-	cout<<"Tu eres la X, muevete a traves del laberinto con las teclas: s--> izquierda, d--> derecha, e--> arriba, x--> abajo. Para salir introduce 0"<<endl;
+	cout<<"Tu eres el 2, muevete a traves del laberinto con las teclas: s--> izquierda, d--> derecha, e--> arriba, x--> abajo. Para salir introduce 0"<<endl;
 	for (int m = 0; m < 10; m++)
 	{ 
 	  	for (int n = 0; n < 10; n++)
@@ -189,3 +191,21 @@ int fila(char** laberinto){
 		}
 	}
 }
+void random(char** laberinto, int* turnoPtr){
+	int randi;
+	int randj;
+
+    srand (time(NULL));
+	if (*turnoPtr+1 !=0 && (*turnoPtr+1)%5 == 0)
+	{
+    	randi = rand() % 10;
+    	randj = rand() % 10;
+    	laberinto[randi][randj] = '5';
+	}
+}
+
+
+
+
+
+
