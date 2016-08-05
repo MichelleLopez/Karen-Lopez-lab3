@@ -3,15 +3,18 @@
 using namespace std;
 void inicializarLaberinto(char**);
 void printLaberinto(char**);
-void moverLaberinto(char**, char, int);
+void moverLaberinto(char**, char, int*, int*);
 int columna(char**);
 int fila(char**);
 
 int main(int argc, char const *argv[])
 {	
+	int* puntosPtr;
 	int puntos = 0;
-	int* puntosPtr = &puntos;
-
+	puntosPtr = &puntos;
+	int* turnoPtr;
+	int turno = 0;
+	turnoPtr = &turno;
 	char** laberinto = new char*[10];
 	char movimiento;
 	inicializarLaberinto(laberinto);
@@ -19,14 +22,12 @@ int main(int argc, char const *argv[])
 	do
 	{
 		cin>>movimiento;
-		moverLaberinto(laberinto, movimiento, puntos);
+
+		moverLaberinto(laberinto, movimiento, &puntos, &turno);
+
 	} while (movimiento != '0');
 
-	for (int i = 0; i < 19; i++) {
-        delete[] laberinto[i];
-    }
-    delete[] laberinto;
-	return 0;
+	
 }
 
 void inicializarLaberinto(char** laberinto){
@@ -39,9 +40,9 @@ void inicializarLaberinto(char** laberinto){
 	int i=0, j=0; 
   	while (!myfile.eof()) { 
     	myfile >> laberinto[i][j]; 
-    	j++; //avanza en la fila 
-  	  	i += j/ 10; //si pasó de N, le suma a 1 a i (siguiente columna) 
-   		j= j % 10; //se asegura que esté entre 0 y N-1 
+    	j++; 
+  	  	i += j/ 10;  
+   		j= j % 10; 
   } 
   myfile.close();
 }
@@ -58,74 +59,112 @@ void printLaberinto(char** laberinto){
   	}
 }
 
-void moverLaberinto(char** laberinto, char movimiento, int puntos){
+void moverLaberinto(char** laberinto, char movimiento, int* puntosPtr, int* turnoPtr){
 	int i = fila(laberinto);
 	int j = columna(laberinto);
 	switch(movimiento){
 		case 's':
-			if (j == 0)
-			{
-				cout<<"No se puede retroceder";
-			}
-			else if(laberinto[i][j-1] == '1' || laberinto[i][j-1] == ' ') {
+			if(laberinto[i][j-1] == '1') {
 				laberinto[i][j] = ' ';
 				laberinto[i][j-1] = '2';
 				printLaberinto(laberinto);
+				*puntosPtr= *puntosPtr + 1;
+				*turnoPtr= *turnoPtr + 1;
+				cout<<"Puntos: "<<*puntosPtr<<"  Turno: "<<*turnoPtr<<endl;
+			}
+			else if (laberinto[i][j-1] == ' ')
+			{
+				laberinto[i][j] = ' ';
+				laberinto[i][j-1] = '2';
+				printLaberinto(laberinto);
+				*turnoPtr= *turnoPtr + 1;
+				cout<<"Puntos: "<<*puntosPtr<<"  Turno: "<<*turnoPtr<<endl;
 			}
 			else if(laberinto[i][j-1] == '3') {
 				cout<<"¡¡FELICIDADES!! encontraste la salida";
 			}
-
-			else{
+			else if(laberinto[i][j-1] == '0'){
 				cout<<"Movimiento no permitido, hay pared";
 			}
 			break;
+
 		case 'd':
 			if (j == 9)
 			{
 				cout<<"No se puede mover hacia adelante";
 			}
-			else if(laberinto[i][j+1] == '1' || laberinto[i][j+1] == ' ') {
+			else if(laberinto[i][j+1] == '1') {
 				laberinto[i][j] = ' ';
 				laberinto[i][j+1] = '2';
 				printLaberinto(laberinto);
+				*puntosPtr= *puntosPtr + 1;
+				*turnoPtr= *turnoPtr + 1;
+				cout<<"Puntos: "<<*puntosPtr<<"  Turno: "<<*turnoPtr<<endl;
+			}
+			else if (laberinto[i][j+1] == ' ')
+			{
+				laberinto[i][j] = ' ';
+				laberinto[i][j+1] = '2';
+				printLaberinto(laberinto);
+				*turnoPtr= *turnoPtr + 1;
+				cout<<"Puntos: "<<*puntosPtr<<"  Turno: "<<*turnoPtr<<endl;
 			}
 			else if(laberinto[i][j+1] == '3') {
 				cout<<"¡¡FELICIDADES!! encontraste la salida";
 			}
-			else{
+			else if(laberinto[i][j+1] == '0'){
 				cout<<"Movimiento no permitido, hay pared";
 			}
 			break;
 		case 'x':
-			if(laberinto[i+1][j] != '0') {
+			if(laberinto[i+1][j] == '1') {
 				laberinto[i][j] = ' ';
 				laberinto[i+1][j] = '2';
 				printLaberinto(laberinto);
-				
+				*puntosPtr= *puntosPtr + 1;
+				*turnoPtr= *turnoPtr + 1;
+				cout<<"Puntos: "<<*puntosPtr<<"  Turno: "<<*turnoPtr<<endl;
 			}
-			else{
+			else if (laberinto[i+1][j] == ' ')
+			{
+				laberinto[i][j] = ' ';
+				laberinto[i+1][j] = '2';
+				printLaberinto(laberinto);
+				*turnoPtr= *turnoPtr + 1;
+				cout<<"Puntos: "<<*puntosPtr<<"  Turno: "<<*turnoPtr<<endl;
+			}
+			else if(laberinto[i+1][j] == '3') {
+				cout<<"¡¡FELICIDADES!! encontraste la salida";
+			}
+			else if(laberinto[i+1][j] == '0'){
 				cout<<"Movimiento no permitido, hay pared";
 			}
 			break;
 		case 'w':
-			if(laberinto[i-1][j] != '0') {
+			if(laberinto[i-1][j] == '1') {
 				laberinto[i][j] = ' ';
 				laberinto[i-1][j] = '2';
 				printLaberinto(laberinto);
-				
+				*turnoPtr= *turnoPtr + 1;
+				*puntosPtr= *puntosPtr + 1;
+				cout<<"Puntos: "<<*puntosPtr<<"  Turno: "<<*turnoPtr<<endl;
 			}
-			else{
+			else if (laberinto[i-1][j] == ' ')
+			{
+				laberinto[i][j] = ' ';
+				laberinto[i-1][j] = '2';
+				printLaberinto(laberinto);
+				*turnoPtr= *turnoPtr + 1;
+				cout<<"Puntos: "<<*puntosPtr<<"  Turno: "<<*turnoPtr<<endl;
+			}
+			else if(laberinto[i-1][j] == '3') {
+				cout<<"¡¡FELICIDADES!! encontraste la salida";
+			}
+			else if(laberinto[i-1][j] == '0'){
 				cout<<"Movimiento no permitido, hay pared";
 			}
 			break;
 	}
-			i = fila(laberinto);
-			j = columna(laberinto);
-			if (laberinto[i][j] == '3')
-				{
-					cout<<"!!FELICIDADES¡¡ Ha encontrado la salida";
-				}
 }
 
 int columna(char** laberinto){
